@@ -1,0 +1,63 @@
+---
+:grid:
+  :id: id_data_item_grid
+  :var: ext_data_item_grid
+  :xtype: Ext.grid.GridPanel
+  :title: <%= t('admin.bom_attr_grid_title') %>
+  :stripeRows: true
+  :width: 300
+  :height: 300
+  :loadMask: true
+:grid_view:
+  :var: ext_data_item_grid_view
+  :xtype: Ext.ux.grid.BufferView
+  :scrollDelay: false
+:SelectionModel:
+  :var: ext_data_item_grid_selmodel
+  :xtype: Ext.grid.RowSelectionModel
+  :singleSelect: true
+  :dataIndex: selRow
+:Store:
+  :var: ext_data_item_grid_store
+  :storeId: data_item_grid_store
+  :url: <%= url_for(:controller=>:nasubi, :action=>:get_data_item_list) %>
+  :autoLoad: true
+  :totalProperty: total
+  :record: row
+  :idPath: attr_id
+  :fields:
+  - :name: attr_id
+    :mapping: attr_id
+  - :name: attr_type
+    :mapping: attr_type
+  - :name: seq
+    :mapping: seq
+  - :name: attr_name
+    :mapping: attr_name
+:colModel:
+  :var: ext_data_item_grid_colmodel
+  :defaults:
+    :sortable: true
+    :menuDisabled: true
+  :columns:
+  - :dataIndex: attr_id
+    :header: ID
+    :hidden: true
+  - :dataIndex: attr_type
+    :header: <%= t('admin.bom_attr_type') %>
+    :width: 75
+    :editor:
+      :xtype: textfield
+      :allowBlank: false
+  - :dataIndex: seq
+    :header: <%= t('admin.bom_attr_seq') %>
+    :width: 50
+    :editor:
+      :xtype: textfield
+      :allowBlank: false
+  - :dataIndex: attr_name
+    :header: <%= t('admin.bom_attr_name') %>
+    :width: 150
+    :editor:
+      :xtype: textfield
+      :allowBlank: false

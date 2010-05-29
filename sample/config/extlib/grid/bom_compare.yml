@@ -1,0 +1,78 @@
+---
+:grid:
+  :id: id_bom_compare_grid
+  :var: ext_bom_compare_grid
+  :xtype: Ext.grid.GridPanel
+  :title: <%= t('bom.bom_compare_grid_title') %>
+  :stripeRows: true
+  :renderTo: bom_compare
+  :width: 350
+  :height: 450
+  :loadMask: true
+:grid_view:
+  :var: ext_bom_compare_grid_view
+  :xtype: Ext.ux.grid.BufferView
+  :scrollDelay: false
+:Store:
+  :var: ext_bom_compare_grid_store
+  :autoLoad: true
+  :totalRecords: total
+  :record: row
+  :id: bom_id
+  :fields:
+  - :name: bom_id
+    :mapping: bom_id
+  - :name: product_id
+    :mapping: product_id
+  - :name: lv
+    :mapping: lv
+  - :name: parts_key_no
+    :mapping: parts_key_no
+  - :name: parts_name
+    :mapping: parts_name
+  - :name: qty_parent
+    :mapping: qty_parent
+  - :name: qty_all
+    :mapping: qty_all
+  - :name: unit_cost
+    :mapping: unit_cost
+  - :name: cost
+    :mapping: cost
+:colModel:
+  :var: ext_bom_compare_grid_colmodel
+  :defaults:
+    :sortable: false
+    :menuDisabled: true
+  :columns:
+  - :dataIndex: bom_id
+    :header: bom_id
+    :hidden: true
+  - :dataIndex: product_id
+    :header: product_id
+    :hidden: true
+  - :dataIndex: lv
+    :header: Level
+    :hidden: true
+  - :dataIndex: parts_key_no
+    :header: <%= t('bom.parts_key_no') %>
+    :width: 150
+    :renderer: "function (value, p, record){var disp = value; for(var i=0;i<record.data.lv;i++) {disp = '　' + disp;} return disp; }"
+  - :dataIndex: parts_name
+    :header: <%= t('bom.parts_name') %>
+    :width: 150
+  - :dataIndex: qty_parent
+    :header: <%= t('bom.qty_parent') %>
+    :width: 40
+    :align: right
+  - :dataIndex: qty_all
+    :header: <%= t('bom.qty_all') %>
+    :width: 40
+    :align: right
+  - :dataIndex: unit_cost
+    :header: <%= t('bom.unit_cost') %>
+    :width: 40
+    :align: right
+  - :dataIndex: cost
+    :header: <%= t('bom.gross_cost') %>
+    :width: 40
+    :align: right

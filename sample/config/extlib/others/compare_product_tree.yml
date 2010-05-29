@@ -1,0 +1,32 @@
+---
+:component:
+  :var: var_compare_product_tree_list
+  :id: id_compare_product_tree_list
+  :xtype: Ext.Panel
+  :renderTo: compare_product_tree
+  :layout: border
+  :width: 250
+  :height: 450
+  :items:
+  - :region: south
+    :id: compare_product_tree_south
+    :xtype: panel
+    :autoHeight: true
+    :tbar:
+      :items:
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.bom_compare') %>
+        :handler: function(){reload_bom_compare("id_compare_product_tree_panel");}
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.image') %>
+        :handler: function(){open_compare_image();}
+  - :region: center
+    :id: id_compare_product_tree_panel
+    :xtype: treepanel
+    :selModel: =new Ext.tree.MultiSelectionModel()
+    :margin: '5 5 0 5'
+    :expanded: true
+    :autoScroll: true
+    :rootVisible: false
+    :root: =new Ext.tree.AsyncTreeNode()
+    :loader: =new Ext.app.ProductLoader({dataUrl:'<%= url_for(:controller=>:fuji, :action=>:get_product_tree_list) %>', clearOnLoad:true})

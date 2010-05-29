@@ -1,0 +1,51 @@
+---
+:component:
+  :var: var_parts_list_context
+  :xtype: Ext.menu.Menu
+  :items:
+  - :text: <%= t('partslist_contextmenu.set_mst') %>
+    :iconCls: info
+    :scope: =this
+    :handler: 'function(btn){
+                    var selRow = getSelectedRow("id_parts_list_grid");
+                    var data_type = selRow[0]["data"]["data_type"];
+                    var bom_data_id = selRow[0]["data"]["bom_id"];
+                    set_to_master(bom_data_id,data_type);
+                }'
+  - :text: <%= t('partslist_contextmenu.apply_mst_one_parts') %>
+    :iconCls: info
+    :scope: =this
+    :handler: 'function(btn){
+                    var selRow = getSelectedRow("id_parts_list_grid");
+                    var parts_key_no = selRow[0]["data"]["parts_key_no"];
+                    var data_type = selRow[0]["data"]["data_type"];
+                    var bom_data_id = selRow[0]["data"]["bom_id"];
+                    Ext.Ajax.request({
+                      url: "<%= url_for(:controller=>:fuji, :action=>:apply_master_parts) %>",
+                      params: {range: "one", parts_key_no: parts_key_no, data_type: data_type, bom_data_id: bom_data_id}
+                    });
+                }'
+  - :text: <%= t('partslist_contextmenu.apply_mst_one_product') %>
+    :iconCls: info
+    :scope: =this
+    :handler: 'function(btn){
+                    var selRow = getSelectedRow("id_parts_list_grid");
+                    var parts_key_no = selRow[0]["data"]["parts_key_no"];
+                    var data_type = selRow[0]["data"]["data_type"];
+                    var product_id = selRow[0]["data"]["pd_id"];
+                    Ext.Ajax.request({
+                      url: "<%= url_for(:controller=>:fuji, :action=>:apply_master_parts) %>",
+                      params: {range: "product", parts_key_no: parts_key_no, data_type: data_type, product_id: product_id}
+                    });
+                }'
+  - :text: <%= t('partslist_contextmenu.apply_mst_all') %>
+    :iconCls: info
+    :scope: =this
+    :handler: 'function(btn){
+                    var selRow = getSelectedRow("id_parts_list_grid");
+                    var parts_key_no = selRow[0]["data"]["parts_key_no"];
+                    Ext.Ajax.request({
+                      url: "<%= url_for(:controller=>:fuji, :action=>:apply_master_parts) %>",
+                      params: {range: "all", parts_key_no: parts_key_no}
+                    });
+                }'

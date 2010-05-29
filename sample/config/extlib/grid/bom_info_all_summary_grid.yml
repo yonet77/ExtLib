@@ -1,0 +1,46 @@
+---
+:grid:
+  :id: id_bom_info_all_summary_grid
+  :var: var_bom_info_all_summary_grid
+  :xtype: Ext.grid.GridPanel
+  :title: <%= t('bom.bom_info_all_summary_grid_title') %>
+  :stripeRows: true
+  :width: 400
+  :height: 300
+  :loadMask: true
+:grid_view:
+  :var: ext_bom_info_all_summary_grid_view
+  :xtype: Ext.grid.GridView
+  :forceFit: false
+  #:xtype: Ext.ux.grid.BufferView
+  #:scrollDelay: false
+:SelectionModel:
+  :var: bom_info_all_summary_selmodel
+  :xtype: Ext.grid.RowSelectionModel
+  :singleSelect: true
+:Store:
+  :var: ext_bom_info_all_summary_grid_store
+  :storeId: bom_info_all_summary_grid_store
+  :url: <%= url_for(:controller=>:fuji,:action=>:get_bom_info_all_summary) %>
+  #:autoLoad: true
+  :totalRecords: total
+  :record: row
+  :id: key
+  :fields:
+  - :name: key
+    :mapping: key
+  - :name: value
+    :mapping: value
+:colModel:
+  :var: ext_bom_info_all_summary_grid_colmodel
+  :defaults:
+    :sortable: true
+    :menuDisabled: true
+  :columns:
+  - :dataIndex: key
+    :header: <%= t('bom.item') %>
+    :width: 120
+  - :dataIndex: value
+    :header: <%= t('bom.value') %>
+    :width: 60
+    :align: right

@@ -1,0 +1,51 @@
+---
+:component:
+  :var: var_product_tree_mst_context
+  :xtype: Ext.menu.Menu
+  :items:
+  - :text: <%= t('producttree_contextmenu.copy') %>
+    :iconCls: info
+    :scope: =this
+    :handler: 'function(btn, e){
+                    var treepanel = Ext.getCmp("id_product_tree_panel");
+                    var node = treepanel.getSelectionModel().getSelectedNode();
+                    var data_type = node.attributes.data_type;
+                    var pd_id = node.attributes.pd_id;
+                    edit_product(node, data_type, pd_id, "copy", "Copy Product..");
+                }'
+  - :text: <%= t('producttree_contextmenu.create_transaction') %>
+    :iconCls: info
+    :scope: =this
+    :handler: 'function(btn, e){
+                    var treepanel = Ext.getCmp("id_product_tree_panel");
+                    var node = treepanel.getSelectionModel().getSelectedNode();
+                    var data_type = node.attributes.data_type;
+                    var pd_id = node.attributes.pd_id;
+                    edit_product(node, data_type, pd_id, "create_trn", "Create Transaction..");
+                }'
+  - :text: <%= t('producttree_contextmenu.delete') %>
+    :iconCls: info
+    :scope: =this
+    :handler: 'function(btn, e){
+                    var treepanel = Ext.getCmp("id_product_tree_panel");
+                    var node = treepanel.getSelectionModel().getSelectedNode();
+                    var data_type = node.attributes.data_type;
+                    var pd_id = node.attributes.pd_id;
+                    edit_product(node, data_type, pd_id, "del", "Delete Product..");
+                }'
+  - :text: <%= t('producttree_contextmenu.edit') %>
+    :iconCls: info
+    :scope: =this
+    :handler: 'function(btn, e){
+                    var treepanel = Ext.getCmp("id_product_tree_panel");
+                    var selNode = treepanel.getSelectionModel().getSelectedNode();
+                    var form_val = {pd_data_type: selNode.attributes.data_type,
+                                    pd_id: selNode.attributes.pd_id,
+                                    product_key_no: selNode.attributes.pd_key_no,
+                                    product_name: selNode.attributes.pd_name};
+                    var pd_form = Ext.getCmp("id_product_edit_form");
+                    pd_form.getForm().setValues(form_val);
+                    if(Ext.getCmp("id_product_edit_window").hidden==true){
+                      Ext.getCmp("id_product_edit_window").show();
+                    }
+                }'

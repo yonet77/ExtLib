@@ -1,0 +1,251 @@
+<% bom_attr_num_list = DataItem.get_item_list(@current_user, 'num') %>
+<% bom_attr_text_list = DataItem.get_item_list(@current_user, 'text') %>
+<% bom_attr_date_list = DataItem.get_item_list(@current_user, 'date') %>
+---
+:grid:
+  :id: id_bom_info_grid
+  :var: var_bom_info_grid
+  :xtype: Ext.grid.EditorGridPanel
+  :title: <%= t('bom.bom_info_grid_title') %>
+  :stripeRows: true
+  :width: 100%
+  :height: 500
+  :loadMask: true
+  :ddGroup: 'bom_info'
+  :clicksToEdit: 1
+  :tbar:
+    :items:
+    - :iconCls: 'icon-bmenu'
+      :text: <%= t('bom.bom_command') %>
+      :menu:
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.bom_add') %>
+        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","add"); }
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.bom_sub_add') %>
+        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","subadd"); }
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.bom_pack_parts') %>
+        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","pack_parts"); }
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.bom_del_w_sub') %>
+        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","del_w_sub"); }
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.bom_del_only_parent') %>
+        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","del_only_parent"); }
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.bom_move_up') %>
+        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","move_up"); }
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.bom_move_down') %>
+        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","move_down"); }
+    - :iconCls: 'icon-bmenu'
+      :text: <%= t('bom.bom_tool') %>
+      :menu:
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.graph') %>
+        :handler: function(){open_summary_graph();}
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.image') %>
+        :handler: function(){open_st_image();}
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.calculate_delivery_date') %>
+        :handler: function(){calculate_delivery_date("id_bom_info_grid");}
+      - :iconCls: 'icon-bom'
+        :text: <%= t('bom.data_export') %>
+        :handler: function(){download_csv();}
+    - :iconCls: 'icon-bom'
+      :text: <%= t('com.btn_save') %>
+      :handler: function(item, e){edit_bom_data("id_bom_info_grid"); }
+  :bbar:
+    :pageSize: 400
+    :displayMsg: Display:{0}-{1} of {2}
+    :emptyMsg: No Data
+#  :listeners: '{keypress: function(e){
+#                     alert(e.getKey());
+#                   }
+#                }'
+:grid_view:
+  :var: ext_bom_info_grid_view
+  :xtype: Ext.ux.grid.BufferView
+  :scrollDelay: 10
+  :cacheSize: 30
+#:plugin:
+#- :var: ext_bom_info_grid_editor
+#  :xtype: Ext.ux.grid.RowEditor
+#  :saveText: Update
+#  :saveurl: <%= url_for(:controller=>:fuji, :action=>:save_bom_info, :authenticity_token=>form_authenticity_token) %>
+#- :var: ext_bom_info_drag_drop
+#  :xtype: Ext.ux.dd.GridDragDropRowOrder
+#  :copy: false
+#  :scrollable: true
+#  :listeners: '{beforerowmove: function(droptarget,oldIndex,newIndex,records,position){
+#            alert(String(oldIndex) + " -> " + String(newIndex));
+#            alert("From: " + droptarget.getGrid().getStore().getAt(oldIndex)["data"]["bom_id"]);
+#            alert("To: " + droptarget.getGrid().getStore().getAt(newIndex)["data"]["bom_id"]);
+#            alert("Position: " + position); }}'
+:SelectionModel:
+  :var: ext_bom_info_grid_selmodel
+  :xtype: Ext.grid.RowSelectionModel
+  :singleSelect: false
+:Store:
+  :var: ext_bom_info_grid_store
+  :storeId: bom_info_grid_store
+  :url: <%= url_for(:controller=>:fuji, :action=>:get_bom_info) %>
+  :totalProperty: total
+  :record: row
+  :idPath: bom_id
+  :fields:
+  - :name: bom_id
+    :mapping: bom_id
+  - :name: product_id
+    :mapping: product_id
+  - :name: parts_key_no
+    :mapping: parts_key_no
+  - :name: lv
+    :mapping: lv
+  - :name: parts_name
+    :mapping: parts_name
+  - :name: qty_parent
+    :mapping: qty_parent
+    :type: float
+  - :name: qty_all
+    :mapping: qty_all
+    :type: float
+  - :name: unit_cost
+    :mapping: unit_cost
+    :type: float
+  - :name: cost
+    :mapping: cost
+    :type: float
+  - :name: lead_time
+    :mapping: lead_time
+    :type: float
+<% bom_attr_num_list.each do |at| %>
+  - :name: <%= at.attr_type.to_s+at.seq.to_s %>
+    :mapping: <%= at.attr_type.to_s+at.seq.to_s %>
+    :type: float
+<% end %>
+<% bom_attr_text_list.each do |at| %>
+  - :name: <%= at.attr_type.to_s+at.seq.to_s %>
+    :mapping: <%= at.attr_type.to_s+at.seq.to_s %>
+<% end %>
+<% bom_attr_date_list.each do |at| %>
+  - :name: <%= at.attr_type.to_s+at.seq.to_s %>
+    :mapping: <%= at.attr_type.to_s+at.seq.to_s %>
+    :dateFormat: Y-m-d
+<% end %>
+  - :name: man_start_date
+    :mapping: man_start_date
+    :dateFormat: Y-m-d
+  - :name: delivery_date
+    :mapping: delivery_date
+    :dateFormat: Y-m-d
+  - :name: lft
+    :mapping: lft
+  - :name: rgt
+    :mapping: rgt
+:colModel:
+  :var: ext_bom_info_grid_colmodel
+  :defaults:
+    :sortable: false
+    :menuDisabled: true
+  :columns:
+  - :dataIndex: bom_id
+    :header: bom_id
+    :hidden: true
+  - :dataIndex: product_id
+    :header: product_id
+    :hidden: true
+  - :dataIndex: parts_key_no
+    :header: <%= t('bom.parts_key_no') %>
+    :width: 125
+    :renderer: "function (value, p, record){
+                              var disp = value;
+                              for(var i=0;i<record.data.lv;i++) {disp = '　　' + disp;}
+                              return disp;
+                            }"
+#    :renderer: "function (value, p, record){
+#                              var link = value;
+#                              for(var i=0;i<record.data.lv;i++) {link = '　　' + link;}
+#                              return String.format('<a href=\"<%= url_for(:controller=>:fuji,:action=>:parts_list)%>?parts_key_no={0}\">{1}</a>',value, link);
+#                            }"
+    :editor:
+      :xtype: textfield
+      :allowBlank: false
+  - :dataIndex: lv
+    :header: Level
+    :hidden: true
+  - :dataIndex: parts_name
+    :header: <%= t('bom.parts_name') %>
+    :width: 175
+    :editor:
+      :xtype: textfield
+      :allowBlank: false
+  - :dataIndex: qty_parent
+    :header: <%= t('bom.qty_parent') %>
+    :width: 100
+    :align: right
+    :editor:
+      :xtype: numberfield
+      :allowBlank: false
+      :minValue: 0
+  - :dataIndex: qty_all
+    :header: <%= t('bom.qty_all') %>
+    :width: 75
+    :align: right
+  - :dataIndex: unit_cost
+    :header: <%= t('bom.unit_cost') %>
+    :width: 75
+    :align: right
+    :editor:
+      :xtype: numberfield
+      :allowBlank: false
+      :minValue: 0
+  - :dataIndex: cost
+    :header: <%= t('bom.gross_cost') %>
+    :width: 75
+    :align: right
+  - :dataIndex: lead_time
+    :header: <%= t('bom.lead_time') %>
+    :width: 75
+    :align: right
+    :editor:
+      :xtype: numberfield
+      :allowBlank: false
+      :minValue: 0
+  - :dataIndex: man_start_date
+    :header: <%= t('bom.man_start_date') %>
+    :width: 100
+    :editor:
+      :xtype: datefield
+      :format: 'Y/m/d'
+  - :dataIndex: delivery_date
+    :header: <%= t('bom.delivery_date') %>
+    :width: 100
+    :editor:
+      :xtype: datefield
+      :format: 'Y/m/d'
+<% bom_attr_num_list.each do |at| %>
+  - :dataIndex: <%= at.attr_type.to_s+at.seq.to_s %>
+    :header: <%= at.attr_name %>
+    :width: 75
+    :align: right
+    :editor:
+      :xtype: numberfield
+<% end %>
+<% bom_attr_text_list.each do |at| %>
+  - :dataIndex: <%= at.attr_type.to_s+at.seq.to_s %>
+    :header: <%= at.attr_name %>
+    :width: 125
+    :editor:
+      :xtype: textfield
+<% end %>
+<% bom_attr_date_list.each do |at| %>
+  - :dataIndex: <%= at.attr_type.to_s+at.seq.to_s %>
+    :header: <%= at.attr_name %>
+    :width: 100
+    :editor:
+      :xtype: datefield
+      :format: 'Y/m/d'
+<% end %>

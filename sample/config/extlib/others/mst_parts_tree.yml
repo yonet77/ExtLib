@@ -1,0 +1,26 @@
+---
+:component:
+  :var: var_mst_parts_tree
+  :id: id_mst_parts_tree
+  :xtype: Ext.Panel
+  :renderTo: mst_parts_tree
+  :layout: border
+  :width: 200
+  :height: 450
+  :items:
+  - :region: center
+    :id: id_mst_parts_tree_panel
+    :title: <%= t('bom.master_parts_tree') %>
+    :xtype: treepanel
+    :margin: '5 5 0 5'
+    :expanded: false
+    :autoScroll: true
+    :rootVisible: false
+    :root: =new Ext.tree.AsyncTreeNode()
+    :loader: =new Ext.app.PartsLoader({dataUrl:'<%= url_for(:controller=>:fuji, :action=>:get_mst_parts_list) %>', clearOnLoad:true})
+    :listeners: '{
+                   click: function(node, e){
+                       var parts_key_no = node.attributes.parts_key_no;
+                       search_parts_by_key(parts_key_no);
+                   }
+                  }'

@@ -1,0 +1,24 @@
+---
+:viewport:
+  :var: account_entry_viewport
+  :xtype: Ext.Viewport
+  :layout: border
+  :items:
+  - :region: center
+    :layout: border
+    :margins: '30 15 5 15'
+    :items:
+    - :region: south
+      :contentEl: msg
+      :height: 40
+      :margins: '0 0 0 0'
+    - :region: center
+      :layout: border
+      :margins: '0 0 0 0'
+      :items:
+      - :region: center
+        :contentEl: admin
+        :split: true
+        :collapsible: false
+        :title: ''
+        :margins: '0 0 0 0'

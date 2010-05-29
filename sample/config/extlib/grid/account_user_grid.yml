@@ -1,0 +1,75 @@
+---
+:grid:
+  :id: id_account_user_grid
+  :var: ext_account_user_grid
+  :xtype: Ext.grid.GridPanel
+  :title: <%= t('admin.user_grid_title') %>
+  :renderTo: account_user_grid
+  :stripeRows: true
+  :width: 100%
+  :height: 200
+  :loadMask: true
+:grid_view:
+  :var: ext_account_user_grid_view
+  :xtype: Ext.ux.grid.BufferView
+  :scrollDelay: false
+:SelectionModel:
+  :var: ext_account_user_grid_selmodel
+  :xtype: Ext.grid.RowSelectionModel
+  :singleSelect: true
+  :dataIndex: selRow
+:Store:
+  :var: ext_account_user_grid_store
+  :storeId: account_user_grid_store
+  :url: <%= url_for(:controller=>:nasubi, :action=>:get_account_user_list) %>
+  :autoLoad: true
+  :totalProperty: total
+  :record: row
+  :idPath: user_id
+  :fields:
+  - :name: account_name
+    :mapping: account_name
+  - :name: user_group_name
+    :mapping: user_group_name
+  - :name: user_id
+    :mapping: user_id
+  - :name: login
+    :mapping: login
+  - :name: name
+    :mapping: name
+  - :name: state
+    :mapping: state
+  - :name: email
+    :mapping: email
+  - :name: admin_flg
+    :mapping: admin_flg
+:colModel:
+  :var: ext_user_grid_colmodel
+  :defaults:
+    :sortable: true
+    :menuDisabled: true
+  :columns:
+  - :dataIndex: user_id
+    :header: UserID
+    :hidden: true
+  - :dataIndex: account_name
+    :header: <%= t('admin.account_name') %>
+    :width: 100
+  - :dataIndex: user_group_name
+    :header: <%= t('admin.user_group_name') %>
+    :width: 100
+  - :dataIndex: login
+    :header: <%= t('admin.user_login_id') %>
+    :width: 100
+  - :dataIndex: name
+    :header: <%= t('admin.user_login_name') %>
+    :width: 150
+  - :dataIndex: email
+    :header: <%= t('admin.user_email') %>
+    :width: 250
+  - :dataIndex: state
+    :header: <%= t('admin.user_status') %>
+    :width: 100
+  - :dataIndex: admin_flg
+    :header: <%= t('admin.user_admin_flg') %>
+    :width: 100

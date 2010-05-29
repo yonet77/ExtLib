@@ -1,0 +1,37 @@
+---
+:form:
+  :var: account_form
+  :xtype: Ext.FormPanel
+  :id: id_account_form
+  :frame: true
+  :bodyStyle: 'padding:15px'
+  :renderTo: account_form
+  :width: 100%
+  :height: 200
+  :title: <%= t('admin.account_form_title') %>
+  :labelWidth: 100
+  :buttons:
+  - :text: <%= t('com.submit_entry') %>
+    :handler: "function(){edit_account('id_account_form','update');}"
+  - :text: <%= t('com.submit_delete') %>
+    :handler: "function(){edit_account('id_account_form','delete');}"
+  :items:
+  - :xtype: textfield
+    :fieldLabel: <%= t('admin.account_id') %>
+    :name: account_id
+    :readOnly: true
+    :width: 200
+  - :xtype: textfield
+    :fieldLabel: <%= t('admin.account_name') %>
+    :name: account_name
+    :width: 200
+  - :xtype: datefield
+    :fieldLabel: <%= t('admin.account_start_date') %>
+    :name: start_date
+    :width: 200
+    :format: "Y/m/d"
+  - :xtype: datefield
+    :fieldLabel: <%= t('admin.account_end_date') %>
+    :name: end_date
+    :width: 200
+    :format: "Y/m/d"

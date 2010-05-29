@@ -1,0 +1,75 @@
+---
+:grid:
+  :id: id_user_group_grid
+  :var: ext_user_group_grid
+  :xtype: Ext.grid.GridPanel
+  :title: <%= t('admin.user_group_grid_title') %>
+  :renderTo: user_group_grid
+  :stripeRows: true
+  :width: 220
+  :height: 300
+  :loadMask: true
+  :tbar:
+  - :xtype: 'buttongroup'
+    :items:
+    - :iconCls: 'icon-bmenu'
+      :text: <%= t('admin.menu_user_group_command') %>
+      :menu:
+      - :iconCls: 'icon-bom'
+        :text: <%= t('admin.add_user_group') %>
+        :handler: function(item, e){add_user_group(); }
+      - :iconCls: 'icon-bom'
+        :text: <%= t('admin.del_user_group') %>
+        :handler: function(item, e){del_user_group("id_user_group_grid"); }
+:grid_view:
+  :var: ext_user_group_grid_view
+  :xtype: Ext.ux.grid.BufferView
+  :scrollDelay: false
+:plugin:
+- :var: ext_user_group_grid_editor
+  :xtype: Ext.ux.grid.RowEditor
+  :saveText: Update
+  :saveurl: <%= url_for(:controller=>:nasubi, :action=>:save_user_group, :authenticity_token=>form_authenticity_token) %>
+:SelectionModel:
+  :var: ext_user_group_grid_selmodel
+  :xtype: Ext.grid.RowSelectionModel
+  :singleSelect: true
+  :listeners: "{rowselect: function(sm, row, rec){
+  var gp_id=rec.get('group_id');
+  reloadGrid('id_user_grid',\"<%= url_for(:controller=>:nasubi, :action=>:get_user_list) %>?group_id=\" + gp_id );
+  } }"
+:Store:
+  :var: ext_user_group_grid_store
+  :storeId: user_group_grid_store
+  :url: <%= url_for(:controller=>:nasubi, :action=>:get_user_group_list) %>
+  :autoLoad: true
+  :totalProperty: total
+  :record: row
+  :idPath: group_id
+  :fields:
+  - :name: group_id
+    :mapping: group_id
+  - :name: group_name
+    :mapping: group_name
+  - :name: description
+    :mapping: description
+:colModel:
+  :var: ext_user_group_grid_colmodel
+  :defaults:
+    :sortable: true
+    :menuDisabled: true
+  :columns:
+  - :dataIndex: group_id
+    :hidden: true
+  - :dataIndex: group_name
+    :header: <%= t('admin.user_group_name') %>
+    :width: 75
+    :editor:
+      :xtype: textfield
+      :allowBlank: false
+  - :dataIndex: description
+    :header: <%= t('admin.user_group_description') %>
+    :width: 125
+    :editor:
+      :xtype: textfield
+      :allowBlank: true

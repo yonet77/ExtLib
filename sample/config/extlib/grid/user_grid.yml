@@ -1,0 +1,90 @@
+---
+:grid:
+  :id: id_user_grid
+  :var: ext_user_grid
+  :xtype: Ext.grid.GridPanel
+  :title: <%= t('admin.user_grid_title') %>
+  :renderTo: user_grid
+  :stripeRows: true
+  :width: 720
+  :height: 300
+  :loadMask: true
+  :tbar:
+  - :xtype: 'buttongroup'
+    :items:
+    - :iconCls: 'icon-bmenu'
+      :text: <%= t('admin.menu_user_command') %>
+      :menu:
+      - :iconCls: 'icon-bom'
+        :text: <%= t('admin.add_user') %>
+        :handler: function(item, e){show_window("id_user_info_window","id_user_info_form",true); }
+#      - :iconCls: 'icon-bom'
+#        :text: <%= t('admin.edit_user') %>
+#        :handler: function(item, e){load_user_info("id_user_grid","id_user_info_window","id_user_info_form"); }
+      - :iconCls: 'icon-bom'
+        :text: <%= t('admin.del_user') %>
+        :handler: function(item, e){del_user("id_user_grid"); }
+:grid_view:
+  :var: ext_user_grid_view
+  :xtype: Ext.ux.grid.BufferView
+  :scrollDelay: false
+:SelectionModel:
+  :var: ext_user_grid_selmodel
+  :xtype: Ext.grid.RowSelectionModel
+  :singleSelect: true
+  :dataIndex: selRow
+:Store:
+  :var: ext_user_grid_store
+  :storeId: user_grid_store
+  :url: <%= url_for(:controller=>:nasubi, :action=>:get_user_list) %>
+  :autoLoad: true
+  :totalProperty: total
+  :record: row
+  :idPath: user_id
+  :fields:
+  - :name: user_group_id
+    :mapping: user_group_id
+  - :name: user_group_name
+    :mapping: user_group_name
+  - :name: user_id
+    :mapping: user_id
+  - :name: login
+    :mapping: login
+  - :name: name
+    :mapping: name
+  - :name: state
+    :mapping: state
+  - :name: email
+    :mapping: email
+  - :name: admin_flg
+    :mapping: admin_flg
+:colModel:
+  :var: ext_user_grid_colmodel
+  :defaults:
+    :sortable: true
+    :menuDisabled: true
+  :columns:
+  - :dataIndex: user_group_id
+    :header: UserGroupID
+    :hidden: true
+  - :dataIndex: user_id
+    :header: UserID
+    :hidden: true
+  - :dataIndex: user_group_name
+    :header: <%= t('admin.user_group_name') %>
+    :width: 100
+  - :dataIndex: login
+    :header: <%= t('admin.user_login_id') %>
+    :width: 100
+  - :dataIndex: name
+    :header: <%= t('admin.user_login_name') %>
+    :width: 150
+  - :dataIndex: email
+    :header: <%= t('admin.user_email') %>
+    :width: 250
+  - :dataIndex: state
+    :header: <%= t('admin.user_status') %>
+    :width: 100
+  - :dataIndex: admin_flg
+    :header: <%= t('admin.user_admin_flg') %>
+    :hidden: true

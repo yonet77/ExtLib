@@ -1,0 +1,192 @@
+<% bom_attr_num_list = DataItem.get_item_list(@current_user, 'num') %>
+<% bom_attr_text_list = DataItem.get_item_list(@current_user, 'text') %>
+<% bom_attr_date_list = DataItem.get_item_list(@current_user, 'date') %>
+---
+:grid:
+  :id: id_parts_list_grid
+  :var: var_parts_list_grid
+  :xtype: Ext.grid.GridPanel
+  :title: <%= t('bom.parts_list_grid_title') %>
+  :stripeRows: true
+  :width: 100%
+  :height: 500
+  :loadMask: true
+  :tbar:
+    #:width: 100%
+    :items:
+    - :name: 'partssearch[parts]'
+      :xtype: textfield
+      :listeners: '{specialkey: function(field, e){if(e.getKey()==e.ENTER){search_parts("id_parts_list_grid");} }}'
+    - :iconCls: icon-search
+      :handler: function(){search_parts("id_parts_list_grid");}
+  :bbar:
+    #:width: 100%
+    :pageSize: 200
+    :displayMsg: Display:{0}-{1} of {2}
+    :emptyMsg: No Data
+  :listeners: '{rowcontextmenu: function(grid, row, e){
+                     grid.getSelectionModel().selectRow(row);
+                     e.stopEvent();
+                     var_parts_list_context.showAt(e.getXY());
+                   }
+                 }'
+:grid_view:
+  :var: ext_parts_list_grid_view
+  :xtype: Ext.grid.GroupingView
+  :groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? \"Items\" : \"Item\"]})'
+:plugin:
+- :var: ext_parts_list_grid_editor
+  :xtype: Ext.ux.grid.RowEditor
+  :clicksToEdit: 1
+  :focusDelay: 150
+  :saveText: <%= t('com.submit_save') %>
+  :cancelText: <%= t('com.submit_cancel') %>
+  :saveurl: <%= url_for(:controller=>:fuji, :action=>:save_parts_list, :authenticity_token=>form_authenticity_token) %>
+:SelectionModel:
+  :var: ext_parts_list_grid_selmodel
+  :xtype: Ext.grid.RowSelectionModel
+  :singleSelect: true
+  :dataIndex: selRow
+:Store:
+  :var: ext_parts_list_grid_store
+  :xtype: Ext.data.GroupingStore
+  :groupField: parts_key_no
+  :storeId: parts_list_grid_store
+  :url: <%= url_for(:controller=>:fuji, :action=>:get_parts_list) %>
+#  :autoLoad:
+#    :params:
+#      :start: 0
+#      :limit: 50
+:Reader:
+  :var: ext_parts_list_grid_reader
+  :xtype: Ext.data.XmlReader
+  :totalProperty: total
+  :record: row
+  :idPath: bom_id
+  :fields:
+  - :name: pd_id
+    :mapping: pd_id
+  - :name: pd_key_no
+    :mapping: pd_key_no
+  - :name: pd_name
+    :mapping: pd_name
+  - :name: bom_id
+    :mapping: bom_id
+  - :name: parts_key_no
+    :mapping: parts_key_no
+  - :name: parts_name
+    :mapping: parts_name
+#  - :name: qty_parent
+#    :mapping: qty_parent
+  - :name: unit_cost
+    :mapping: unit_cost
+    :type: float
+  - :name: lead_time
+    :mapping: lead_time
+    :type: float
+  - :name: data_type
+    :mapping: data_type
+  - :name: mst_flg
+    :mapping: mst_flg
+<% bom_attr_num_list.each do |at| %>
+  - :name: <%= at.attr_type.to_s+at.seq.to_s %>
+    :mapping: <%= at.attr_type.to_s+at.seq.to_s %>
+    :type: float
+<% end %>
+<% bom_attr_text_list.each do |at| %>
+  - :name: <%= at.attr_type.to_s+at.seq.to_s %>
+    :mapping: <%= at.attr_type.to_s+at.seq.to_s %>
+<% end %>
+<% bom_attr_date_list.each do |at| %>
+  - :name: <%= at.attr_type.to_s+at.seq.to_s %>
+    :mapping: <%= at.attr_type.to_s+at.seq.to_s %>
+    :type: date
+<% end %>
+:colModel:
+  :var: ext_parts_list_grid_colmodel
+  :defaults:
+    :sortable: true
+    #:menuDisabled: true
+  :columns:
+  - :dataIndex: mst_flg
+    :header: ' '
+    :width: 30
+    :renderer: "function(val){
+                              var img;
+                              if (val==0){img='' } else {img='<img src=\"/images/icon_favourites.gif\">';}
+                              return img;
+                            }"
+  - :dataIndex: data_type
+    :header: ' '
+    :width: 30
+    :renderer: "function(val){
+                              var img;
+                              if (val=='mst'){img='<img src=\"/images/page_key.gif\">' } else {img='<img src=\"/images/page_link.gif\">';}
+                              return img;
+                            }"   
+  - :dataIndex: pd_id
+    :header: pd_id
+    :hidden: true
+  - :dataIndex: pd_key_no
+    :header: <%= t('bom.product_key_no') %>
+    :width: 100
+  - :dataIndex: pd_name
+    :header: <%= t('bom.product_name') %>
+    :width: 125
+  - :dataIndex: bom_id
+    :hidden: true
+  - :dataIndex: parts_key_no
+    :header: <%= t('bom.parts_key_no') %>
+    :width: 75
+  - :dataIndex: parts_name
+    :header: <%= t('bom.parts_name') %>
+    :width: 125
+    :editor:
+      :xtype: textfield
+      :allowBlank: false
+#  - :dataIndex: qty_parent
+#    :header: <%= t('bom.qty_parent') %>
+#    :width: 80
+#    :align: right
+#    :editor:
+#      :xtype: numberfield
+#      :allowBlank: false
+#      :minValue: 0
+  - :dataIndex: unit_cost
+    :header: <%= t('bom.unit_cost') %>
+    :width: 80
+    :align: right
+    :editor:
+      :xtype: numberfield
+      :allowBlank: false
+      :minValue: 0
+  - :dataIndex: lead_time
+    :header: <%= t('bom.lead_time') %>
+    :width: 80
+    :align: right
+    :editor:
+      :xtype: numberfield
+      :allowBlank: false
+      :minValue: 0
+<% bom_attr_num_list.each do |at| %>
+  - :dataIndex: <%= at.attr_type.to_s+at.seq.to_s %>
+    :header: <%= at.attr_name %>
+    :width: 80
+    :align: right
+    :editor:
+      :xtype: numberfield
+<% end %>
+<% bom_attr_text_list.each do |at| %>
+  - :dataIndex: <%= at.attr_type.to_s+at.seq.to_s %>
+    :header: <%= at.attr_name %>
+    :width: 125
+    :editor:
+      :xtype: textfield
+<% end %>
+<% bom_attr_date_list.each do |at| %>
+  - :dataIndex: <%= at.attr_type.to_s+at.seq.to_s %>
+    :header: <%= at.attr_name %>
+    :width: 125
+    :editor:
+      :xtype: datefield
+<% end %>

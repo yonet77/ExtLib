@@ -1,0 +1,43 @@
+---
+:form:
+  :var: user_entry_form
+  :xtype: Ext.FormPanel
+  :id: id_user_entry_form
+  :frame: true
+  :bodyStyle: 'padding:25px'
+  :renderTo: user_entry_form
+  :border: false
+  :standardSubmit: true
+  :url: <%= url_for(:controller=>:users,:action=>:create, :authenticity_token=>form_authenticity_token) %>
+  :title: <%= t('admin.account_entry_form_title') %>
+  :labelWidth: 150
+  :buttons:
+  - :text: <%= t('com.submit_entry') %>
+    :handler: function(){this.ownerCt.ownerCt.getForm().submit(); }
+  :items:
+  - :xtype: textfield
+    :fieldLabel: <%= t('admin.account_name') %>
+    :name: account[account_name]
+    :width: 200
+  - :xtype: textfield
+    :fieldLabel: <%= t('admin.admin_login_id') %>
+    :name: user[login]
+    :width: 200
+  - :xtype: textfield
+    :fieldLabel: <%= t('admin.admin_login_name') %>
+    :name: user[name]
+    :width: 200
+  - :xtype: textfield
+    :fieldLabel: <%= t('admin.admin_email') %>
+    :name: user[email]
+    :width: 200
+  - :xtype: textfield
+    :inputType: password
+    :fieldLabel: <%= t('admin.admin_password') %>
+    :name: user[password]
+    :width: 200
+  - :xtype: textfield
+    :inputType: password
+    :fieldLabel: <%= t('admin.admin_password_confirm') %>
+    :name: user[password_confirmation]
+    :width: 200

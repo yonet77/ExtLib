@@ -1,0 +1,84 @@
+<% data_text_list, data_num_list, data_date_list={}, {}, {}
+   data_text_fields_col, data_num_fields_col, data_date_fields_col = [],[],[]
+   row_fields = 10
+   DataItem.get_item_list(@current_user, 'num').each{|item| data_num_list[item.seq]=item.attr_name }
+   DataItem.get_item_list(@current_user, 'text').each{|item| data_text_list[item.seq]=item.attr_name }
+   DataItem.get_item_list(@current_user, 'date').each{|item| data_date_list[item.seq]=item.attr_name }
+   data_text_fields_col = (1..DataItem::MAX_TEXT_SEQ).to_a.in_groups_of(row_fields, false)
+   data_num_fields_col = (1..DataItem::MAX_NUM_SEQ).to_a.in_groups_of(row_fields, false)
+   data_date_fields_col = (1..DataItem::MAX_DATE_SEQ).to_a.in_groups_of(row_fields, false)
+%>
+---
+:form:
+  :var: data_item_form
+  :xtype: Ext.FormPanel
+  :id: id_data_item_form
+  :frame: true
+  :width: 100%
+  :autoHeight: true
+  :renderTo: data_item_form
+  :border: true
+  :title: <%= t('admin.bom_data_item_form_title') %>
+  :autoScroll: true
+  :labelWidth: 45
+  :buttons:
+  - :text: <%= t('com.submit_entry') %>
+    :handler: function(){save_data_item('data_item_form'); }
+  :items:
+    :layout: column
+    :bodyStyle: 'padding:2px'
+    :items:
+    - :title: <%= t('admin.bom_data_item_text') %>
+      :columnWidth: 0.5
+      :items:
+        :layout: column
+        :bodyStyle: 'padding:2px'
+        :items:
+<% data_text_fields_col.each do |col| %>
+        - :columnWidth: <%= (1.to_f)/(data_text_fields_col.size.to_f) %>
+          :layout: form
+          :items:
+<% col.each do |seq| %>
+          - :xtype: textfield
+            :fieldLabel: Text<%= seq.to_s %>
+            :name: text[<%= seq.to_s %>]
+            :value: <%= data_text_list[seq] unless data_text_list[seq].blank? %>
+            :width: 75
+<% end %>
+<% end %>
+    - :title: <%= t('admin.bom_data_item_num') %>
+      :columnWidth: 0.25
+      :items:
+        :layout: column
+        :bodyStyle: 'padding:2px'
+        :items:
+<% data_num_fields_col.each do |col| %>
+        - :columnWidth: <%= (1.to_f)/(data_num_fields_col.size.to_f) %>
+          :layout: form
+          :items:
+<% col.each do |seq| %>
+          - :xtype: textfield
+            :fieldLabel: Num<%= seq.to_s %>
+            :name: num[<%= seq.to_s %>]
+            :value: <%= data_num_list[seq] unless data_num_list[seq].blank? %>
+            :width: 75
+<% end %>
+<% end %>
+    - :title: <%= t('admin.bom_data_item_date') %>
+      :columnWidth: 0.25
+      :items:
+        :layout: column
+        :bodyStyle: 'padding:2px'
+        :items:
+<% data_date_fields_col.each do |col| %>
+        - :columnWidth: <%= (1.to_f)/(data_date_fields_col.size.to_f) %>
+          :layout: form
+          :items:
+<% col.each do |seq| %>
+          - :xtype: textfield
+            :fieldLabel: Date<%= seq.to_s %>
+            :name: date[<%= seq.to_s %>]
+            :value: <%= data_date_list[seq] unless data_date_list[seq].blank? %>
+            :width: 75
+<% end %>
+<% end %>

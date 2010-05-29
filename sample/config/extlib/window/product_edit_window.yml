@@ -1,0 +1,38 @@
+---
+:window:
+  :var: var_product_edit_window
+  :xtype: Ext.Window
+  :id: id_product_edit_window
+  :width: 300
+  :height: 150
+  :closeAction: 'hide'
+  :title: Edit Product
+  :layout: fit
+  :items:
+  - :id: id_product_edit_form
+    :xtype: form
+    :frame: true
+    :items:
+    - :xtype: hidden
+      :name: pd_data_type
+    - :xtype: hidden
+      :name: pd_id
+    - :xtype: textfield
+      :fieldLabel: <%= t('bom.product_key_no') %>
+      :name: product_key_no
+      :allowBlank: false
+      :width: 200
+    - :xtype: textfield
+      :fieldLabel: <%= t('bom.product_name') %>
+      :name: product_name
+      :allowBlank: false
+      :width: 200
+  :buttons:
+  - :id: id_product_tree_edit_btn
+    :text: <%= t('com.submit_entry') %>
+    :handler: 'function(btn, e){
+                  Ext.getCmp("id_product_edit_form").getForm().submit({
+                    url: "<%= url_for(:contoller=>:fuji, :action=>:edit_product) %>",
+                    params: {command: "edit"}
+                  });
+                }'

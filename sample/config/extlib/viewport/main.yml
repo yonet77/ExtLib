@@ -1,0 +1,139 @@
+---
+:viewport:
+  :var: main_form_vp
+  :id: id_main_form_vp
+  :xtype: Ext.Viewport
+  :layout: border
+  :monitorResize: true
+  :items:
+  - :region: south
+    :xtype: container
+    :contentEl: msg
+    :height: 30
+  - :region: center
+    :id: main_form_tabpanel
+    :margins: '30 10 2 10'
+    :xtype: tabpanel
+    :plain: true
+    #:activeTab: 0
+    :items:
+    - :title: ImportBOM
+      :layout: border
+      :items:
+      - :region: west
+        :id: id_importbom_inputform
+        :xtype: panel
+        :layout: fit
+        :contentEl: importbom_inputform
+        :split: true
+        :collapsible: true
+        :width: 250
+        :title: ''
+      - :region: center
+        :id: id_importbom_imported_bom_grid
+        :xtype: container
+        :layout: fit
+        :contentEl: imported_bom_grid
+        :title: ''
+    - :title: ProductBOM
+      :contentEl: productbom
+      :layout: border
+      :items:
+      - :region: west
+        :id: id_productbom_product_list
+        :xtype: panel
+        :layout: fit
+        :contentEl: product_list
+        :border: false
+        :split: true
+        :collapsible: true
+        :width: 250
+        :title: ''
+      - :region: center
+        :id: id_productbom_bom_list
+        :xtype: container
+        :layout: fit
+        :contentEl: bom_list
+        :border: false
+        :split: true
+        :title: ''
+      - :region: east
+        :id: id_productbom_summary_list
+        :xtype: panel
+        :layout: border
+        :split: true
+        :collapsible: true
+        :width: 200
+        :items:
+        - :region: north
+          :id: id_productbom_bom_info_sum
+          :layout: fit
+          :xtype: container
+          :contentEl: bom_info_sum
+          :height: 300
+          :border: false
+          :split: true
+        - :region: center
+          :id: id_productbom_bom_info_all_sum
+          :layout: fit
+          :xtype: container
+          :contentEl: bom_info_all_sum
+          :border: false
+          :split: true
+    - :title: PartsDatabase
+      :contentEl: partsdatabase
+      :layout: border
+      :items:
+      - :region: west
+        :id: id_partsdatabase_mst_parts_list
+        :xtype: panel
+        :layout: fit
+        :contentEl: mst_parts_list
+        :split: true
+        :collapsible: true
+        :width: 200
+        :border: false
+      - :region: center
+        :id: id_partsdatabase_parts_list
+        :xtype: container
+        :layout: fit
+        :contentEl: parts_list
+        :border: false
+    - :title: Compare
+      :contentEl: comparebom
+      :layout: border
+      :items:
+      - :region: center
+        :id: id_comparebom_bom_compare
+        :xtype: container
+        :layout: fit
+        :contentEl: bom_compare
+        :split: true
+        :autoScroll: true
+      - :region: west
+        :id: id_comparebom_bom_compare_list
+        :xtype: panel
+        :layout: fit
+        :contentEl: bom_compare_list
+        :split: true
+        :collapsible: true
+        :width: 250
+        :border: false
+    - :title: ExportBOM
+      :layout: border
+      :items:
+      - :region: west
+        :id: id_export_product_tree
+        :xtype: panel
+        :layout: fit
+        :contentEl: export_product_list
+        :split: true
+        :collapsible: true
+        :width: 250
+        :title: ''
+      - :region: center
+        :id: id_export_data_item
+        :xtype: container
+        :layout: fit
+        :contentEl: export_data_item_list
+        :title: ''

@@ -1,0 +1,28 @@
+---
+:form:
+  :var: var_bom_import_form
+  :xtype: Ext.Panel
+  :layout: border
+  :items:
+  - :region: north
+    :id: id_bom_import_form
+    :xtype: form
+    :height: 60
+    :frame: true
+    :border: false
+    :title: <%= t('admin.bom_data_import_form_title') %>
+    :fileUpload: true
+    :items:
+    - :xtype: fileuploadfield
+      :id: id_bom_upload
+      :buttonOnly: true
+      :buttonText: <%= t('bom.data_import') %>
+      :width: 20
+      :iconCls: 'icon-bom'
+      :listeners: "{fileselected: function(fb, v){upload_bom_info('id_bom_import_form', v, fb); } }"
+  - :region: center
+    :xtype: panel
+    :id: id_importd_product_info
+    :frame: true
+    :border: false
+    :title: <%= t('bom.product_info') %>

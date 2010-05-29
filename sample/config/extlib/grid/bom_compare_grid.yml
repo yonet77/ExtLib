@@ -1,0 +1,70 @@
+---
+:grid:
+  :id: id_product_compare_search_grid
+  :var: ext_product_compare_search_grid
+  :xtype: Ext.grid.GridPanel
+  :title: <%= t('bom.product_grid_title') %>
+  :stripeRows: true
+  :width: 250
+  :height: 450
+  :loadMask: true
+  :tbar:
+    :items:
+    - :name: 'comparesearch[product]'
+      :xtype: 'textfield'
+      :listeners: '{specialkey: function(field, e){if(e.getKey()==e.ENTER){search_compare_product("bom_compare_grid");} }}'
+    - :iconCls: 'icon-search'
+      :handler: function(){search_compare_product("bom_compare_grid");}
+    #- :xtype: tbseparator
+    - :iconCls: 'icon-bom'
+      :text: <%= t('bom.bom_compare') %>
+      :handler: function(){reload_bom_compare("id_product_compare_search_grid");}
+#  :bbar:
+#    :pageSize: 25
+#    :displayMsg: Display:{0}-{1} of {2}
+#    :emptyMsg: No Data
+:grid_view:
+  :var: ext_product_compare_search_grid_view
+  :xtype: Ext.ux.grid.BufferView
+  :scrollDelay: false
+  :forceFit: true
+:SelectionModel:
+  :var: ext_product_compare_search_grid_selmodel
+  :xtype: Ext.grid.RowSelectionModel
+  :singleSelect: false
+  :dataIndex: selRow
+:Store:
+  :var: ext_product_compare_search_grid_store
+  :storeId: product_compare_search_grid_store
+  :url: <%= url_for(:controller=>:fuji, :action=>:get_product_list) %>
+  :autoLoad: 
+    :params:
+      :start: 0
+      :limit: 25
+  :totalProperty: total
+  :record: row
+  :id: product_id
+  :fields:
+  - :name: pd_id
+    :mapping: pd_id
+  - :name: pd_key_no
+    :mapping: pd_key_no
+  - :name: pd_name
+    :mapping: pd_name
+:colModel:
+  :var: ext_product_compare_search_grid_colmodel
+  :defaults:
+    :sortable: true
+    :menuDisabled: true
+  :columns:
+  - :dataIndex: pd_id
+    :header: id
+    :hidden: true
+  - :dataIndex: pd_key_no
+    :header: <%= t('bom.product_key_no') %>
+    :sortable: true
+    :width: 150
+  - :dataIndex: pd_name
+    :header: <%= t('bom.product_name') %>
+    :sortable: true
+    :width: 200

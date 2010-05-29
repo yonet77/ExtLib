@@ -1,0 +1,56 @@
+---
+:grid:
+  :id: id_account_grid
+  :var: ext_account_grid
+  :xtype: Ext.grid.GridPanel
+  :title: <%= t('admin.account_grid_title') %>
+  :renderTo: account_grid
+  :stripeRows: true
+  :width: 100%
+  :height: 200
+  :loadMask: true
+:grid_view:
+  :var: ext_account_grid_view
+  :xtype: Ext.ux.grid.BufferView
+  :scrollDelay: false
+:SelectionModel:
+  :var: ext_account_grid_selmodel
+  :xtype: Ext.grid.RowSelectionModel
+  :singleSelect: true
+  :dataIndex: selRow
+  :listeners: "{rowselect: function(sm, row, rec){Ext.getCmp('id_account_form').getForm().loadRecord(rec); } }"
+:Store:
+  :var: ext_account_grid_store
+  :storeId: account_grid_store
+  :url: <%= url_for(:controller=>:nasubi, :action=>:get_account_list) %>
+  :autoLoad: true
+  :totalProperty: total
+  :record: row
+  :idPath: account_id
+  :fields:
+  - :name: account_id
+    :mapping: account_id
+  - :name: account_name
+    :mapping: account_name
+  - :name: start_date
+    :mapping: start_date
+  - :name: end_date
+    :mapping: end_date
+:colModel:
+  :var: ext_account_grid_colmodel
+  :defaults:
+    :sortable: true
+    :menuDisabled: true
+  :columns:
+  - :dataIndex: account_id
+    :header: <%= t('admin.account_id') %>
+    :width: 100
+  - :dataIndex: account_name
+    :header: <%= t('admin.account_name') %>
+    :width: 150
+  - :dataIndex: start_date
+    :header: <%= t('admin.account_start_date') %>
+    :width: 100
+  - :dataIndex: end_date
+    :header: <%= t('admin.account_end_date') %>
+    :width: 100

@@ -1,0 +1,81 @@
+<% bom_attr_num_list = DataItem.get_item_list(@current_user, 'num') %>
+---
+:grid:
+  :id: id_bom_info_summary_grid
+  :var: var_bom_info_summary_grid
+  :xtype: Ext.grid.GridPanel
+  :title: <%= t('bom.bom_info_summary_by_parts_grid_title') %>
+  :stripeRows: true
+  :width: 600
+  :height: 400
+  :loadMask: true
+  :bbar:
+    :pageSize: 300
+    :displayMsg: Display:{0}-{1} of {2}
+    :emptyMsg: No Data
+:grid_view:
+  :var: ext_bom_info_summary_grid_view
+  :xtype: Ext.grid.GridView
+  :forceFit: false
+:SelectionModel:
+  :var: ext_bom_info_summary_grid_selmodel
+  :xtype: Ext.grid.RowSelectionModel
+  :singleSelect: true
+:Store:
+  :var: ext_bom_info_summary_grid_store
+  :storeId: bom_info_summary_grid_store
+  :url: <%= url_for(:controller=>:fuji, :action=>:get_bom_info_summary) %>
+  #:autoLoad: true
+  :totalProperty: total
+  :record: row
+  :id: parts_key_no
+  :fields:
+  - :name: product_id
+    :mapping: product_id
+  - :name: parts_key_no
+    :mapping: parts_key_no
+  - :name: parts_name
+    :mapping: parts_name
+  - :name: qty
+    :mapping: qty
+    :type: float
+  - :name: cost
+    :mapping: cost
+    :type: float
+<% bom_attr_num_list.each do |at| %>
+  - :name: <%= at.attr_type.to_s+at.seq.to_s %>
+    :mapping: <%= at.attr_type.to_s+at.seq.to_s %>
+    :type: float
+<% end %>
+:colModel:
+  :var: ext_bom_info_summary_grid_colmodel
+  :defaults:
+    :sortable: true
+    :menuDisabled: true
+  :columns:
+  - :dataIndex: product_id
+    :header: product_id
+    :hidden: true
+  - :dataIndex: parts_key_no
+    :header: <%= t('bom.parts_key_no') %>
+    :width: 100
+  - :dataIndex: parts_name
+    :header: <%= t('bom.parts_name') %>
+    :width: 150
+  - :dataIndex: qty
+    :header: <%= t('bom.qty_all') %>
+    :width: 70
+    :align: right
+    :xtype: numbercolumn
+  - :dataIndex: cost
+    :header: <%= t('bom.gross_cost') %>
+    :width: 70
+    :align: right
+    :xtype: numbercolumn
+<% bom_attr_num_list.each do |at| %>
+  - :dataIndex: <%= at.attr_type.to_s+at.seq.to_s %>
+    :header: <%= at.attr_name %>
+    :width: 70
+    :align: right
+    :xtype: numbercolumn
+<% end %>

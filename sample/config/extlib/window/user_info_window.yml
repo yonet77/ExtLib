@@ -1,0 +1,60 @@
+---
+:window:
+  :var: user_info_window
+  :xtype: Ext.Window
+  :applyTo: user_info_window
+  :id: id_user_info_window
+  :width: 450
+  :height: 300
+  :closeAction: 'hide'
+  :title: <%= t('admin.user_entry_form_title') %>
+  :items:
+  - :xtype: form
+    :id: id_user_info_form
+    :frame: true
+    :bodyStyle: 'padding:5px 5px 0'
+    :labelWidth: 150
+    :items:
+    - :xtype: fieldset
+      :layout: form
+      :autoHeight: true
+      :defaultType: textfield
+      :items:
+      - :xtype: combo
+        :fieldLabel: <%= t('com.user_group') %>
+        :hiddenName: user_group_id
+        :store:
+          :xtype: arraystore
+          :fields: [user_group_id, user_group_name]
+          :url: <%= url_for(:controller=>:nasubi, :action=>:get_user_group_ary_list) %>
+        :valueField: user_group_id
+        :displayField: user_group_name
+        :triggerAction: all
+        :editable: false
+      - :name: user_id
+        :xtype: hidden
+      - :fieldLabel: <%= t('admin.user_login_id') %>
+        :name: login
+        :width: 200
+      - :fieldLabel: <%= t('admin.user_login_name') %>
+        :name: name
+        :width: 200
+      - :fieldLabel: <%= t('admin.user_email') %>
+        :name: email
+        :width: 200
+      - :fieldLabel: <%= t('admin.user_password') %>
+        :inputType: password
+        :name: password
+        :width: 200
+      - :fieldLabel: <%= t('admin.user_password_confirm') %>
+        :inputType: password
+        :name: :password_confirmation
+        :width: 200
+      - :xtype: checkbox
+        :fieldLabel: <%= t('admin.user_admin_flg') %>
+        :name: :admin_flg
+    :buttons:
+      - :text: <%= t('com.submit_entry') %>
+        :handler: function(){save_user_info("id_user_info_form"); }
+      - :text: <%= t('com.submit_cancel') %>
+        :handler: function(){user_info_window.hide(); }
