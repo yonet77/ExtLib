@@ -43,6 +43,7 @@
   :defaults:
     :sortable: false
     :menuDisabled: true
+  :row_number: true
   :columns:
   - :dataIndex: bom_id
     :header: bom_id

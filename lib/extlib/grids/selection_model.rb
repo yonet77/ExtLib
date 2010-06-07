@@ -7,9 +7,6 @@ module ExtLib
 	  	attr_accessor :var, :xtype
 	  	
 	  	def initialize(config_file, param_option={}, compare_id=nil)
-	  		puts '-------------------------'
-	  		puts 'SelectionModel..'
-	  		puts '-------------------------'
 	  		
 	  		config_opts = {}
 	  		config_opts = config_file[:SelectionModel]

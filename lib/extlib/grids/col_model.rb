@@ -7,9 +7,6 @@ module ExtLib
 	  	attr_accessor :var
 	  	
 	  	def initialize(config_file, param_option={}, compare_id=nil)
-	  		puts '-------------------------'
-	  		puts 'ColModel..'
-	  		puts '-------------------------'
 	  		raise ArgumentError, "Missing colModel parameter in Ext.Grid call" unless config_file[:colModel]
 	  		
 	  		config_opts = {}
@@ -20,20 +17,23 @@ module ExtLib
         raise ArgumentError, "Missing var parameter in ColModel call" unless @opts[:var]
 	  		@var = @opts[:var]
 	  		@var = @opts[:var] + compare_id.to_s unless compare_id.blank?
-	  		@opts = @opts.dup.delete_if{|key,val| [:var,:xtype].include?(key)}
-        @cols = @opts.dup.delete_if{|key,val| [:defaults, :columns].include?(key)}
+        @row_no = @opts[:row_number]
+	  		@opts = @opts.dup.delete_if{|key,val| [:var, :xtype, :row_number].include?(key)}
+        @cols = @opts.dup.delete_if{|key,val| [:defaults, :columns, :row_number].include?(key)}
 	  	end
 	  	
 	  	# javascript生成
 	  	def create_js()
 	      
+        columns = ext_to_json(@opts[:columns])
+        columns.insert(1, "new Ext.grid.RowNumberer({width: 33}),") if @row_no
 	      ext_code = <<-CODE
 	        // create the ColModel
 	        var <%= @var%> = new Ext.grid.ColumnModel({
 	          <% unless @opts[:defaults].blank? %>
 	            defaults: <%= ext_to_json(@opts[:defaults]) %>,
 	          <% end %>
-	          columns: <%= ext_to_json(@opts[:columns]) %>
+	          columns: <%= columns %>
             <% unless @cols.blank? %>
             , <%= ext_to_json(@cols) %>
             <% end %>

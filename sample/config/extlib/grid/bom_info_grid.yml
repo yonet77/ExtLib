@@ -15,30 +15,33 @@
   :clicksToEdit: 1
   :tbar:
     :items:
-    - :iconCls: 'icon-bmenu'
-      :text: <%= t('bom.bom_command') %>
-      :menu:
-      - :iconCls: 'icon-bom'
-        :text: <%= t('bom.bom_add') %>
-        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","add"); }
-      - :iconCls: 'icon-bom'
-        :text: <%= t('bom.bom_sub_add') %>
-        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","subadd"); }
-      - :iconCls: 'icon-bom'
-        :text: <%= t('bom.bom_pack_parts') %>
-        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","pack_parts"); }
-      - :iconCls: 'icon-bom'
-        :text: <%= t('bom.bom_del_w_sub') %>
-        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","del_w_sub"); }
-      - :iconCls: 'icon-bom'
-        :text: <%= t('bom.bom_del_only_parent') %>
-        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","del_only_parent"); }
-      - :iconCls: 'icon-bom'
-        :text: <%= t('bom.bom_move_up') %>
-        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","move_up"); }
-      - :iconCls: 'icon-bom'
-        :text: <%= t('bom.bom_move_down') %>
-        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","move_down"); }
+#    - :iconCls: 'icon-bmenu'
+#      :text: <%= t('bom.bom_command') %>
+#      :menu:
+#      - :iconCls: 'icon-bom'
+#        :text: <%= t('bom.bom_add') %>
+#        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","add"); }
+#      - :iconCls: 'icon-bom'
+#        :text: <%= t('bom.bom_sub_add') %>
+#        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","subadd"); }
+#      - :iconCls: 'icon-bom'
+#        :text: <%= t('bom.bom_pack_parts') %>
+#        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","pack_parts"); }
+#      - :iconCls: 'icon-bom'
+#        :text: <%= t('bom.bom_del_w_sub') %>
+#        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","del_w_sub"); }
+#      - :iconCls: 'icon-bom'
+#        :text: <%= t('bom.bom_del_only_parent') %>
+#        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","del_only_parent"); }
+#      - :iconCls: 'icon-bom'
+#        :text: <%= t('bom.bom_move_up') %>
+#        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","move_up"); }
+#      - :iconCls: 'icon-bom'
+#        :text: <%= t('bom.bom_move_down') %>
+#        :handler: function(item, e){edit_bom_structure("id_bom_info_grid","move_down"); }
+    - :iconCls: 'icon-bom'
+      :text: <%= t('com.btn_save') %>
+      :handler: function(item, e){edit_bom_data("id_bom_info_grid"); }
     - :iconCls: 'icon-bmenu'
       :text: <%= t('bom.bom_tool') %>
       :menu:
@@ -54,17 +57,17 @@
       - :iconCls: 'icon-bom'
         :text: <%= t('bom.data_export') %>
         :handler: function(){download_csv();}
-    - :iconCls: 'icon-bom'
-      :text: <%= t('com.btn_save') %>
-      :handler: function(item, e){edit_bom_data("id_bom_info_grid"); }
   :bbar:
     :pageSize: 400
     :displayMsg: Display:{0}-{1} of {2}
     :emptyMsg: No Data
-#  :listeners: '{keypress: function(e){
-#                     alert(e.getKey());
-#                   }
-#                }'
+  :listeners: '{rowcontextmenu: function(grid, row, e){
+                     if(grid.getSelectionModel().getCount()==0){grid.getSelectionModel().selectRow(row);}
+                     if(grid.getSelectionModel().getCount()==1){grid.getSelectionModel().selectRow(row);}
+                     e.stopEvent();
+                     var_bom_info_grid_context.showAt(e.getXY());
+                   }
+                 }'
 :grid_view:
   :var: ext_bom_info_grid_view
   :xtype: Ext.ux.grid.BufferView
@@ -150,6 +153,7 @@
   :defaults:
     :sortable: false
     :menuDisabled: true
+  :row_number: true
   :columns:
   - :dataIndex: bom_id
     :header: bom_id

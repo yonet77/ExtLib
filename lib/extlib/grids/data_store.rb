@@ -8,9 +8,6 @@ module ExtLib
 	  	attr_accessor :var
 	  	
 	  	def initialize(config_file, param_option={}, compare_id=nil)
-	  		puts '-------------------------'
-	  		puts 'Store..'
-	  		puts '-------------------------'
 	  		raise ArgumentError, "Missing DataStore parameter in Ext.Grid call" unless config_file[:Store]
 	  		
 	  		config_opts = {}

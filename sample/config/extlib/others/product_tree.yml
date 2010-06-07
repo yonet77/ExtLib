@@ -58,6 +58,7 @@
                            bom_tree.getLoader().load(top_node);
                            top_node.expand();
                            bom_tree.show();
+                           init_bom_grid();
 
                            Ext.getCmp("id_product_tree_list").doLayout();
                            Ext.getCmp("id_product_tree_list").getLayout().setActiveItem("id_product_bom_tree_panel");
@@ -68,8 +69,8 @@
                          }
                          
                        },
-                     nodedrop: function(drop){
-                       relate_trn_to_mst(drop.dropNode, drop.dropNode.attributes.pd_id, drop.target.attributes.pd_id);
+                     nodedrop: function(e){
+                       relate_trn_to_mst(e.dropNode, e.dropNode.attributes.pd_id, e.target.attributes.pd_id);
                        }
                     }'
     #:add_PartsListView(Ext.getCmp("id_product_tree_list"), node.attributes.data_type, node.attributes.top_tree_id);
@@ -81,6 +82,8 @@
     :expanded: true
     :autoScroll: true
     :rootVisible: true
+    #:enableDD: true
+    :animate: true
     :root:
       :nodeType: async
     :loader: =new Ext.app.BomLoader({dataUrl:'<%= url_for(:controller=>:fuji, :action=>:get_subbom_tree) %>'})
@@ -97,5 +100,8 @@
                          bom_tree.getLoader().load(node);
                          node.expand();
                        }
+                     },
+                   nodedrop: function(e){
+                       edit_bom_tree(e.dropNode, e.target, e.point);
                      }
                   }'

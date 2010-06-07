@@ -29,6 +29,29 @@ module ExtjsHelper
         return Ext.getCmp(grid_id).selModel.getSelections();
       }
 
+      function showMsg(title, msg, fn, scope){
+        Ext.Msg.alert(title, msg, fn, scope);
+      }
+
+
+      function init_product_edit_window(){
+        Ext.getCmp("id_product_edit_form").getForm().reset();
+        Ext.getCmp("id_product_edit_window").hide();
+      }
+
+      function init_bom_grid(){
+        Ext.getCmp("id_bom_info_grid").getStore().removeAll();
+        Ext.getCmp("id_bom_info_summary_grid").getStore().removeAll();
+        Ext.getCmp("id_bom_info_all_summary_grid").getStore().removeAll();
+        Ext.Ajax.request({
+          url: '#{url_for(:controller=>:fuji, :action=>:clear_bom_info_session)}',
+        });
+      }
+
+      function init_parts_list_grid(){
+        Ext.getCmp("id_parts_list_grid").getStore().removeAll();
+      }
+
     !)
   end
 
@@ -116,11 +139,6 @@ module ExtjsHelper
         });
       }
 
-      function init_product_edit_window(){
-        Ext.getCmp("id_product_edit_form").getForm().reset();
-        Ext.getCmp("id_product_edit_window").hide();
-      }
-
       function reload_bom(product_data_type, product_id, bom_tree_id){
         Ext.Ajax.request({
           url: '#{url_for(:controller=>:fuji, :action=>:reload_bom_info)}',
@@ -160,6 +178,35 @@ module ExtjsHelper
         Ext.Ajax.request({
           url: '#{url_for(:controller=>:fuji, :action=>:edit_bom_structure)}',
           params: {bom_id: bom_id, bom_ids: bom_ids.join(','), command: com},
+          success: function(){loadMask.hide();},
+          failure: function(){loadMask.hide();}
+        });
+      }
+
+      function edit_bom_tree(source, target, point){
+        var pos, com;
+        var src, tgt;
+        if (point=="below") {
+          pos = "#{BaseBom::MOVE_DOWN}";
+          com = "move";
+          src = source;
+          tgt = target;
+        } else if (point=="above") {
+          pos = "#{BaseBom::MOVE_UP}";
+          com = "move";
+          src = source;
+          tgt = target;
+        } else {
+          pos = "";
+          com = "replace";
+          src = target;
+          tgt = source;
+        }
+        var loadMask = new Ext.LoadMask(source.getOwnerTree().getEl(), {msg:"Editing..."});
+        loadMask.show();
+        Ext.Ajax.request({
+          url: '#{url_for(:controller=>:fuji, :action=>:edit_bom_structure)}',
+          params: {bom_id: src.attributes.bom_tree_id, target: tgt.attributes.bom_tree_id, point: pos, command: com, tree: true},
           success: function(){loadMask.hide();},
           failure: function(){loadMask.hide();}
         });

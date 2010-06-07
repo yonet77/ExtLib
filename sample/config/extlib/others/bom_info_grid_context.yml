@@ -1,0 +1,33 @@
+---
+:component:
+  :var: var_bom_info_grid_context
+  :xtype: Ext.menu.Menu
+  :items:
+  - :text: <%= t('bom.bom_add') %>
+    :iconCls: 'icon-bom'
+    :scope: =this
+    :handler: function(item, e){edit_bom_structure("id_bom_info_grid","add"); }
+  - :text: <%= t('bom.bom_sub_add') %>
+    :iconCls: 'icon-bom'
+    :scope: =this
+    :handler: function(item, e){edit_bom_structure("id_bom_info_grid","subadd"); }
+  - :text: <%= t('bom.bom_pack_parts') %>
+    :iconCls: 'icon-bom'
+    :scope: =this
+    :handler: function(item, e){edit_bom_structure("id_bom_info_grid","pack_parts"); }
+  - :text: <%= t('bom.bom_del_w_sub') %>
+    :iconCls: 'icon-bom'
+    :scope: =this
+    :handler: function(item, e){edit_bom_structure("id_bom_info_grid","del_w_sub"); }
+  - :text: <%= t('bom.bom_del_only_parent') %>
+    :iconCls: 'icon-bom'
+    :scope: =this
+    :handler: function(item, e){edit_bom_structure("id_bom_info_grid","del_only_parent"); }
+  - :text: <%= t('bom.bom_move_up') %>
+    :iconCls: 'icon-bom'
+    :scope: =this
+    :handler: function(item, e){edit_bom_structure("id_bom_info_grid","move_up"); }
+  - :text: <%= t('bom.bom_move_down') %>
+    :iconCls: 'icon-bom'
+    :scope: =this
+    :handler: function(item, e){edit_bom_structure("id_bom_info_grid","move_down"); }

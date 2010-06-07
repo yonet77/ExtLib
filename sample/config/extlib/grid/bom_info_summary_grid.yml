@@ -52,16 +52,17 @@
   :defaults:
     :sortable: true
     :menuDisabled: true
+  :row_number: true
   :columns:
   - :dataIndex: product_id
     :header: product_id
     :hidden: true
   - :dataIndex: parts_key_no
     :header: <%= t('bom.parts_key_no') %>
-    :width: 100
+    :width: 90
   - :dataIndex: parts_name
     :header: <%= t('bom.parts_name') %>
-    :width: 150
+    :width: 100
   - :dataIndex: qty
     :header: <%= t('bom.qty_all') %>
     :width: 70

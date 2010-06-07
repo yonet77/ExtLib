@@ -8,9 +8,6 @@ module ExtLib
 	  	attr_accessor :var, :id
 	  	
 	  	def initialize(grid_name, config_file, config_obj, param_option={}, compare_id=nil)
-	  		puts '-------------------------'
-	  		puts 'Grid..'
-	  		puts '-------------------------'
 	  		raise ArgumentError, "Missing Grid parameter in Ext.Grid call" unless config_file[:grid]
 	  		
 	  		config_opts = {}

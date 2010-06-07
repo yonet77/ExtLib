@@ -36,10 +36,11 @@
   :defaults:
     :sortable: true
     :menuDisabled: true
+  :row_number: true
   :columns:
   - :dataIndex: key
     :header: <%= t('bom.item') %>
-    :width: 120
+    :width: 90
   - :dataIndex: value
     :header: <%= t('bom.value') %>
     :width: 60
