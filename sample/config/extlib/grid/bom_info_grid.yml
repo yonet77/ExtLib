@@ -1,10 +1,13 @@
-<% bom_attr_num_list = DataItem.get_item_list(@current_user, 'num') %>
-<% bom_attr_text_list = DataItem.get_item_list(@current_user, 'text') %>
-<% bom_attr_date_list = DataItem.get_item_list(@current_user, 'date') %>
+<%
+bom_attr_num_list = DataItem.get_item_list(@current_user, 'num')
+bom_attr_text_list = DataItem.get_item_list(@current_user, 'text')
+bom_attr_date_list = DataItem.get_item_list(@current_user, 'date')
+grid_base = "bom_info_grid"
+%>
 ---
 :grid:
-  :id: id_bom_info_grid
-  :var: var_bom_info_grid
+  :id: id_<%= grid_base %>
+  :var: var_<%= grid_base %>
   :xtype: Ext.grid.EditorGridPanel
   :title: <%= t('bom.bom_info_grid_title') %>
   :stripeRows: true
@@ -69,7 +72,7 @@
                    }
                  }'
 :grid_view:
-  :var: ext_bom_info_grid_view
+  :var: var_<%= grid_base %>_view
   :xtype: Ext.ux.grid.BufferView
   :scrollDelay: 10
   :cacheSize: 30
@@ -88,12 +91,12 @@
 #            alert("To: " + droptarget.getGrid().getStore().getAt(newIndex)["data"]["bom_id"]);
 #            alert("Position: " + position); }}'
 :SelectionModel:
-  :var: ext_bom_info_grid_selmodel
+  :var: var_<%= grid_base %>_selmodel
   :xtype: Ext.grid.RowSelectionModel
   :singleSelect: false
 :Store:
-  :var: ext_bom_info_grid_store
-  :storeId: bom_info_grid_store
+  :var: var_<%= grid_base %>_store
+  :storeId: <%= grid_base %>_store
   :url: <%= url_for(:controller=>:fuji, :action=>:get_bom_info) %>
   :totalProperty: total
   :record: row
@@ -149,7 +152,7 @@
   - :name: rgt
     :mapping: rgt
 :colModel:
-  :var: ext_bom_info_grid_colmodel
+  :var: var_<%= grid_base %>_colmodel
   :defaults:
     :sortable: false
     :menuDisabled: true

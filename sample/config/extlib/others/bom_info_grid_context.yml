@@ -7,10 +7,22 @@
     :iconCls: 'icon-bom'
     :scope: =this
     :handler: function(item, e){edit_bom_structure("id_bom_info_grid","add"); }
+  - :text: <%= t('bom.bom_add_ref') %>
+    :iconCls: 'icon-bom'
+    :scope: =this
+    :handler: function(item, e){show_other_bom_window("add"); }
   - :text: <%= t('bom.bom_sub_add') %>
     :iconCls: 'icon-bom'
     :scope: =this
     :handler: function(item, e){edit_bom_structure("id_bom_info_grid","subadd"); }
+  - :text: <%= t('bom.bom_sub_add_ref') %>
+    :iconCls: 'icon-bom'
+    :scope: =this
+    :handler: function(item, e){show_other_bom_window("subadd"); }
+  - :text: <%= t('bom.bom_replace') %>
+    :iconCls: 'icon-bom'
+    :scope: =this
+    :handler: function(item, e){show_other_bom_window("replace"); }
   - :text: <%= t('bom.bom_pack_parts') %>
     :iconCls: 'icon-bom'
     :scope: =this

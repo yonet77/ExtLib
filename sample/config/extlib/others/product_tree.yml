@@ -24,11 +24,25 @@
       :dropConfig:
         :appendOnly: true
         :allowContainerDrop: true
-      :bbar:
+      :tbar:
         :items:
-        - :iconCls: 'icon-bom'
-          :text: <%= t('bom.data_export_qty_by_date') %>
-          :handler: function(){download_qty_by_date();}
+        - :iconCls: icon-bom
+          :text: <%= t('bom.create_new_product') %>
+          :handler: 'function(){
+                         var node = Ext.getCmp("id_product_tree_panel").getRootNode();
+                         edit_product(node, null, null, "new", "Create Product..");
+                      }'
+        - :iconCls: icon-bmenu
+          :text: <%= t('bom.bom_tool') %>
+          :menu:
+          - :iconCls: icon-bom
+            :text: <%= t('bom.data_export_qty_by_date') %>
+            :handler: function(){download_qty_by_date();}
+#      :bbar:
+#        :items:
+#        - :iconCls: 'icon-bom'
+#          :text: <%= t('bom.data_export_qty_by_date') %>
+#          :handler: function(){download_qty_by_date();}
       :rootVisible: false
       :root: =new Ext.tree.AsyncTreeNode()
       :loader: =new Ext.app.ProductLoader({dataUrl:'<%= url_for(:controller=>:fuji, :action=>:get_product_tree_list) %>', clearOnLoad:true})
@@ -43,31 +57,21 @@
                        },
                      click: function(node, e){
                          var bom_tree = Ext.getCmp("id_product_bom_tree_panel");
-                         if(node.attributes.bom_cnt > 1){
-                           bom_tree.getLoader().dataUrl = "<%= url_for(:controller=>:fuji, :action=>:get_subbom_tree) %>";
-                           bom_tree.getLoader().baseParams = {data_type: node.attributes.data_type, bom_tree_id: node.attributes.top_tree_id};
-
-                           var node_icon = (node.attributes.data_type == "mst") ? "mst_product" : "trn_product";
-                           var node_data = {"text": node.attributes.pd_key_no + " : " + node.attributes.pd_name,
-                                            "iconCls": node_icon,
-                                            "bom_tree_id": node.attributes.top_tree_id,
-                                            "data_type": node.attributes.data_type,
-                                            "product_id": node.attributes.pd_id};
-                           var top_node = new Ext.tree.TreeNode(node_data);
-                           bom_tree.setRootNode(top_node);
-                           bom_tree.getLoader().load(top_node);
-                           top_node.expand();
-                           bom_tree.show();
-                           init_bom_grid();
-
-                           Ext.getCmp("id_product_tree_list").doLayout();
-                           Ext.getCmp("id_product_tree_list").getLayout().setActiveItem("id_product_bom_tree_panel");
-                         } else {
-                           bom_tree.hide();
-                           Ext.getCmp("id_product_tree_list").doLayout();
-                           reload_bom(node.attributes.data_type, node.attributes.pd_id, node.attributes.top_tree_id);
-                         }
-                         
+                         bom_tree.getLoader().baseParams = {data_type: node.attributes.data_type, bom_tree_id: node.attributes.top_tree_id};
+                         var node_icon = (node.attributes.data_type == "mst") ? "mst_product" : "trn_product";
+                         var pd_node_data = {"text": node.attributes.pd_key_no + " : " + node.attributes.pd_name,
+                                             "iconCls": node_icon,
+                                             "bom_tree_id": node.attributes.top_tree_id,
+                                             "data_type": node.attributes.data_type,
+                                             "product_id": node.attributes.pd_id};
+                         var pd_node = new Ext.tree.TreeNode(pd_node_data);
+                         bom_tree.setRootNode(pd_node);
+                         bom_tree.getLoader().load(pd_node);
+                         pd_node.expand();
+                         bom_tree.show();
+                         init_bom_grid();
+                         Ext.getCmp("id_product_tree_list").doLayout();
+                         Ext.getCmp("id_product_tree_list").getLayout().setActiveItem("id_product_bom_tree_panel");
                        },
                      nodedrop: function(e){
                        relate_trn_to_mst(e.dropNode, e.dropNode.attributes.pd_id, e.target.attributes.pd_id);
@@ -86,10 +90,10 @@
     :animate: true
     :root:
       :nodeType: async
-    :loader: =new Ext.app.BomLoader({dataUrl:'<%= url_for(:controller=>:fuji, :action=>:get_subbom_tree) %>'})
+    :loader: =new Ext.app.BomLoader({dataUrl:'<%= url_for(:controller=>:fuji, :action=>:get_subbom_tree) %>', clearOnLoad:true})
     :listeners: '{click: function(node, e){
                        var bom_tree = node.getOwnerTree();
-                       reload_bom(node.attributes.data_type, node.attributes.product_id, node.attributes.bom_tree_id);
+                       reload_bom_grid(node.attributes.data_type, node.attributes.product_id, node.attributes.bom_tree_id);
                      },
                    beforeexpandnode: function(node, deep, anim){
                        var bom_tree = node.getOwnerTree();

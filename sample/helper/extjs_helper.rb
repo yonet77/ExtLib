@@ -16,13 +16,8 @@ module ExtjsHelper
       function reloadTree(tree_id, params){
         var tree = Ext.getCmp(tree_id);
         var topNode = tree.getRootNode();
-        if(params \!= null){
-          if(params == 'bomtree'){
-            tree.getLoader().baseParams = {data_type: topNode.attributes.data_type, bom_tree_id: topNode.attributes.bom_tree_id};
-          }
-        }
         tree.getLoader().load(topNode);
-        tree.getRootNode().expand();
+        topNode.expand();
       }
 
       function getSelectedRow(grid_id){
@@ -93,11 +88,11 @@ module ExtjsHelper
       function upload_bom_info(form_id, value, fb){
         if(value \!= ''){
           Ext.getCmp(form_id).getForm().submit({
-            url: \"#{url_for(:conrtoller=>:fuji, :action=>:import_bom, :authenticity_token=>form_authenticity_token)}\",
+            url: "#{url_for(:conrtoller=>:fuji, :action=>:import_bom, :authenticity_token=>form_authenticity_token)}",
             params: {filename: value},
-            waitMsg: \"#{t('bom.data_uploading_msg')}\",
-            success: function(fp, o){Ext.Msg.alert('message',\"#{t('bom.data_upload_complete_msg')}\"); fb.reset();},
-            failure: function(fp, o){Ext.Msg.alert('alert',o.result.errors.msg);}
+            waitMsg: "#{t('bom.data_uploading_msg')}",
+            success: function(fp, o){Ext.Msg.alert("message","#{t('bom.data_upload_complete_msg')}"); fb.reset();},
+            failure: function(fp, o){Ext.Msg.alert("alert",o.result.errors.msg);}
           });
         }
       }
@@ -139,11 +134,24 @@ module ExtjsHelper
         });
       }
 
-      function reload_bom(product_data_type, product_id, bom_tree_id){
+      function reload_bom_grid(product_data_type, product_id, bom_tree_id){
         Ext.Ajax.request({
           url: '#{url_for(:controller=>:fuji, :action=>:reload_bom_info)}',
           params: {pd_id: product_id, bom_tree_id: bom_tree_id, pd_data_type: product_data_type}
         });
+      }
+
+      function reload_pdtree_bomtree(producttree_id, bomtree_id, new_bom_id){
+        // BOMツリー上のトップノードの属性を変更
+        var bomtree = Ext.getCmp(bomtree_id);
+        var topNode = bomtree.getRootNode();
+        topNode.attributes.bom_tree_id = new_bom_id;
+        bomtree.getLoader().baseParams = {data_type: topNode.attributes.data_type, bom_tree_id: new_bom_id};
+        // 製品ツリー上で選択されているノードの属性を変更
+        var pdNode = Ext.getCmp(producttree_id).getSelectionModel().getSelectedNode();
+        pdNode.attributes.top_tree_id = new_bom_id;
+        // リロード
+        reloadTree(bomtree_id);
       }
 
       function edit_bom_data(grid_id){
@@ -183,30 +191,42 @@ module ExtjsHelper
         });
       }
 
-      function edit_bom_tree(source, target, point){
-        var pos, com;
-        var src, tgt;
-        if (point=="below") {
-          pos = "#{BaseBom::MOVE_DOWN}";
-          com = "move";
-          src = source;
-          tgt = target;
-        } else if (point=="above") {
-          pos = "#{BaseBom::MOVE_UP}";
-          com = "move";
-          src = source;
-          tgt = target;
-        } else {
-          pos = "";
-          com = "replace";
-          src = target;
-          tgt = source;
+      function show_other_bom_window(com){
+        var title;
+        switch(com){
+          case "add":
+            title = "#{t('bom.bom_add_ref')}";
+            break;
+          case "subadd":
+            title = "#{t('bom.bom_sub_add_ref')}";
+            break;
+          case "replace":
+            title = "#{t('bom.bom_replace')}";
+            break;
+          default:
+            title = "?";
+            break;
         }
-        var loadMask = new Ext.LoadMask(source.getOwnerTree().getEl(), {msg:"Editing..."});
+        var win = Ext.getCmp("id_bom_search_window");
+        win.setTitle(title);
+        win.setIconClass(com);
+        if(win.hidden){win.show();}
+      }
+
+      function edit_bom_tree(data_type, ref_bom, com, win){
+        var org_bom_grid_id = "id_bom_info_grid";
+        var selRow = getSelectedRow(org_bom_grid_id);
+        if(selRow.length == 0){Ext.Msg.alert("alert","#{t("bom.bom_info_grid_title") + t("msg.alert_no_row_selected")}"); return}
+        if(ref_bom==null){Ext.Msg.alert("alert","#{t("msg.alert_no_parts_selected")}"); return}
+
+        var org_bom = selRow[0]["data"]["bom_id"];
+        var loadMask = new Ext.LoadMask(Ext.getCmp(org_bom_grid_id).getEl(), {msg:"Editing..."});
+        win.hide();
         loadMask.show();
+
         Ext.Ajax.request({
-          url: '#{url_for(:controller=>:fuji, :action=>:edit_bom_structure)}',
-          params: {bom_id: src.attributes.bom_tree_id, target: tgt.attributes.bom_tree_id, point: pos, command: com, tree: true},
+          url: "#{url_for(:controller=>:fuji, :action=>:edit_bom_structure)}",
+          params: {bom_id: org_bom, target_bom: ref_bom, target_data_type: data_type, command: com},
           success: function(){loadMask.hide();},
           failure: function(){loadMask.hide();}
         });

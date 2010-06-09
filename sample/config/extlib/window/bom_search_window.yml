@@ -1,0 +1,110 @@
+<%
+ext_base = "bom_search_window"
+%>
+---
+:window:
+  :var: var_<%= ext_base %>
+  :id: id_<%= ext_base %>
+  :xtype: Ext.Window
+  :width: 300
+  :height: 150
+  :closeAction: 'hide'
+  :title: ""
+  :layout: fit
+  :width: 600
+  :height: 400
+  :x: 300
+  :y: 200
+  :constrainHeader: true
+  :items:
+  - :id: id_<%= ext_base %>_tabs
+    :xtype: tabpanel
+    :plain: true
+    :activeTab: 0
+    :items:
+    - :id: id_<%= ext_base %>_tabs_product
+      :title: Product
+      :layout: border
+      :items:
+      - :region: west
+        :id: id_<%= ext_base %>_tabs_producttree
+        :title: ProductList
+        :xtype: treepanel
+        :layout: fit
+        :width: 250
+        :autoScroll: true
+        :rootVisible: false
+        :root: =new Ext.tree.AsyncTreeNode()
+        :loader: =new Ext.app.ProductLoader({dataUrl:'<%= url_for(:controller=>:fuji, :action=>:get_product_tree_list) %>', clearOnLoad:true})
+        :listeners: '{click: function(node, e){
+                         var bom_tree = Ext.getCmp("id_<%= ext_base %>_tabs_bomtree");
+                         bom_tree.getLoader().dataUrl = "<%= url_for(:controller=>:fuji, :action=>:get_subbom_tree) %>";
+                         bom_tree.getLoader().baseParams = {data_type: node.attributes.data_type, bom_tree_id: node.attributes.top_tree_id};
+                         var node_icon = (node.attributes.data_type == "mst") ? "mst_product" : "trn_product";
+                         var node_data = {"text": node.attributes.pd_key_no + " : " + node.attributes.pd_name,
+                                          "iconCls": node_icon,
+                                          "bom_tree_id": node.attributes.top_tree_id,
+                                          "data_type": node.attributes.data_type,
+                                          "product_id": node.attributes.pd_id};
+                         var top_node = new Ext.tree.TreeNode(node_data);
+                         bom_tree.setRootNode(top_node);
+                         bom_tree.getLoader().load(top_node);
+                         bom_tree.show();
+                         top_node.expand();
+                         }
+        }'
+      - :region: center
+        :id: id_<%= ext_base %>_tabs_bomtree
+        :title: BOM
+        :xtype: treepanel
+        :layout: fit
+        :root: =new Ext.tree.AsyncTreeNode()
+        #:rootVisible: false
+        :hidden: true
+        :autoScroll: true
+        :loader: =new Ext.app.BomLoader({dataUrl:'<%= url_for(:controller=>:fuji, :action=>:get_subbom_tree) %>'})
+        :listeners: '{beforeexpandnode: function(node, deep, anim){
+                         var bom_tree = node.getOwnerTree();
+                         var subNode = node.firstChild;
+                         if(subNode == null){return;}
+                         if(node.firstChild.attributes.bom_tree_id == null){
+                           bom_tree.getLoader().baseParams = {data_type: node.attributes.data_type, bom_tree_id: node.attributes.bom_tree_id};
+                           bom_tree.getLoader().load(node);
+                           node.expand();
+                         }
+                       }
+                      }'
+    - :id: id_<%= ext_base %>_tabs_parts
+      :title: PartsList
+      :xtype: container
+  :buttons:
+  - :id: id_<%= ext_base %>_submit_btn
+    :text: <%= t('com.submit_select') %>
+    :handler: 'function(btn, e){
+                  var ref_bom, data_type;
+                  if(Ext.getCmp("id_<%= ext_base %>_tabs_bomtree").hidden){
+                    var selRec;
+                  } else {
+                    var selNode = Ext.getCmp("id_<%= ext_base %>_tabs_bomtree").getSelectionModel().getSelectedNode();
+                    ref_bom = selNode.attributes.bom_tree_id;
+                    data_type = selNode.attributes.data_type;
+                  }
+                  var com = Ext.getCmp("id_<%= ext_base %>").iconCls;
+                  edit_bom_tree(data_type, ref_bom, com, Ext.getCmp("id_<%= ext_base %>"));
+                }'
+  - :id: id_<%= ext_base %>_cancel_btn
+    :text: <%= t('com.submit_cancel') %>
+    :handler: 'function(btn, e){
+                  var_<%= ext_base %>.hide();
+                }'
+  :listeners: '{beforehide: function(win){
+                     Ext.getCmp("id_<%= ext_base %>_tabs_bomtree").setRootNode(new Ext.tree.AsyncTreeNode());
+                     Ext.getCmp("id_<%= ext_base %>_tabs_bomtree").hide();
+                     win.setPosition(300,200);
+                     win.setSize(600,400);
+                   },
+                 beforeshow: function(win){
+                     var topNode = Ext.getCmp("id_<%= ext_base %>_tabs_producttree").getRootNode();
+                     Ext.getCmp("id_<%= ext_base %>_tabs_producttree").getLoader().load(topNode);
+                   }
+                 }'

@@ -4,7 +4,7 @@
   :xtype: Ext.menu.Menu
   :items:
   - :text: <%= t('producttree_contextmenu.copy') %>
-    :iconCls: info
+    :iconCls: icon-bom
     :scope: =this
     :handler: 'function(btn, e){
                     var treepanel = Ext.getCmp("id_product_tree_panel");
@@ -14,7 +14,7 @@
                     edit_product(node, data_type, pd_id, "copy", "Copy Product..");
                 }'
   - :text: <%= t('producttree_contextmenu.create_transaction') %>
-    :iconCls: info
+    :iconCls: icon-bom
     :scope: =this
     :handler: 'function(btn, e){
                     var treepanel = Ext.getCmp("id_product_tree_panel");
@@ -23,18 +23,8 @@
                     var pd_id = node.attributes.pd_id;
                     edit_product(node, data_type, pd_id, "create_trn", "Create Transaction..");
                 }'
-  - :text: <%= t('producttree_contextmenu.delete') %>
-    :iconCls: info
-    :scope: =this
-    :handler: 'function(btn, e){
-                    var treepanel = Ext.getCmp("id_product_tree_panel");
-                    var node = treepanel.getSelectionModel().getSelectedNode();
-                    var data_type = node.attributes.data_type;
-                    var pd_id = node.attributes.pd_id;
-                    edit_product(node, data_type, pd_id, "del", "Delete Product..");
-                }'
   - :text: <%= t('producttree_contextmenu.edit') %>
-    :iconCls: info
+    :iconCls: icon-bom
     :scope: =this
     :handler: 'function(btn, e){
                     var treepanel = Ext.getCmp("id_product_tree_panel");
@@ -48,4 +38,14 @@
                     if(Ext.getCmp("id_product_edit_window").hidden==true){
                       Ext.getCmp("id_product_edit_window").show();
                     }
+                }'
+  - :text: <%= t('producttree_contextmenu.delete') %>
+    :iconCls: icon-bom
+    :scope: =this
+    :handler: 'function(btn, e){
+                    var treepanel = Ext.getCmp("id_product_tree_panel");
+                    var node = treepanel.getSelectionModel().getSelectedNode();
+                    var data_type = node.attributes.data_type;
+                    var pd_id = node.attributes.pd_id;
+                    edit_product(node, data_type, pd_id, "del", "Delete Product..");
                 }'
